@@ -1,0 +1,96 @@
+1) npx create-react-app app_name
+2) cd app_name
+3) npm start
+4) Go to terminal and install bootstrap: npm install bootstrap --save
+5) import bootstrap in index.js [import 'bootstrap/dist/css/bootstrap.min.css';]
+6) Under src create a new folder called component
+7) Under src create a new folder called services.
+8) Create a file inside services called UserService.js.
+9) Go to terminal and install axois to consume rest api call
+  [ npm install axois ] => Http Library to make rest api calls.
+10) On UserService import axois. And do the following:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import axios from 'axios';
+
+const USERS_REST_API_URL = 'http://localhost:8000/users';
+
+class userService{
+
+  getUsers(){
+    axios.get(USERS_REST_API_URL);
+  }
+
+}
+//Lets export the object of this class:
+export default new userService;
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+11) Under component folder create UserComponent.js
+12) import UserService: 
+  [import UserService from '../services/UserService';]
+  create class, constructor and so On
+  ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+import React from 'react';
+import UserService from '../services/UserService';
+
+class UserComponent extends React.Component{
+
+  constructor(){
+    this.state = {
+      users:[]
+    }
+  }
+
+  componentDidMount(){ //This is a lifecycle method to call a rest api
+    UserService.getUsers().then((response) => {
+      this.setState({users: response.data})
+    });
+  }
+
+  render(){
+    return(
+      <div>
+        <h1 className="text-center">User List</h1>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <td>User ID</td>
+              <td>First Name</td>
+              <td>Last Name</td>
+              <td>Email</td>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              this.state.users.map(
+                <tr key={user.id}>
+                  <td>{user.id}</td>
+                  <td>{user.firstName}</td>
+                  <td>{user.lastName}</td>
+                  <td>{user.email}</td>
+                </tr>
+              )
+            }
+          </tbody>
+
+        </table>
+
+      </div>
+    )
+  }
+
+}
+
+export default UserComponent;
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+13) Go to the App.js and do this:
++++++++++++++++++++++++++++++++++++++++++++++++
+function App() {
+  return (
+    <div className="App">
+      <UserComponent />
+    </div>
+  );
+}
+
+export default App;
+++++++++++++++++++++++++++++++++++++++++++++++
